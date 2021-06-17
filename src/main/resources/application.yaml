@@ -1,0 +1,54 @@
+server:
+  port: ${PORT:8080}
+  servlet.context-path: /api/thesolution
+
+spring:
+  application:
+    name: ${APPLICATION_NAME:spring-k8s}
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: ${DATASOURCE_URL:jdbc:mysql://${DATASOURCE_SERVER:""}:${DATASOURCE_PORT:3306}/${DATASOURCE_DATABASE:""}}?allowPublicKeyRetrieval=true&useSSL=false
+    username: ${DATASOURCE_USERNAME:""}}
+    password: ${DATASOURCE_PASSWORD:""}}
+  jpa:
+    show-sql: ${SHOW_SQL:false}
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        temp:
+          use_jdbc_metadata_defaults: false
+        jdbc:
+          lob.non_contextual_creation: true
+
+springdoc:
+  swagger-ui:
+    path: ${SPRINGDOC_SWAGGER_UI_PATH:/swagger-ui}
+    enabled: ${SPRINGDOC_SWAGGER_UI_ENABLE:true}
+  api-docs:
+    path: ${SPRINGDOC_APIDOCS_PATH:/v3/api-docs}
+    enabled: ${SPRINGDOC_APIDOCS_ENABLE:true}
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:info}
+
+# Prometheus
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ${ACTUATOR_ENDPOINTS:info,health,prometheus,loggers,httptrace,metrics}
+    prometheus:
+      enabled: ${PROMETHEUS_ENABLED:true}
+    metrics:
+      export:
+        prometheus:
+          enabled: ${PROMETHEUS_ENABLED:true}
+          descriptions: ${PROMETHEUS_DESCRIPTION_ENABLED:true}
+  metrics:
+    tags:
+      application: ${spring.application.name}
